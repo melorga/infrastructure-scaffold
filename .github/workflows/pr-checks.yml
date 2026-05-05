@@ -1,6 +1,0 @@
-# Intentionally removed.
-#
-# The previous pr-checks workflow was a TODO scaffold and is now
-# redundant with ci.yml, which already runs on pull_request.
-# This placeholder file exists only because git did not delete
-# the path in the same commit batch; safe to remove entirely.
