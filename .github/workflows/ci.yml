@@ -2,80 +2,85 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
+
+permissions:
+  contents: read
+  security-events: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TF_VERSION: 1.9.8
 
 jobs:
-  lint:
+  terraform-fmt:
+    name: Terraform fmt
     runs-on: ubuntu-latest
-    name: Lint Code
-    
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
-    
-    - name: Install Python dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8
-        # TODO: Add requirements.txt or pyproject.toml installation
-        # pip install -r requirements.txt
-    
-    - name: Lint with flake8
-      run: |
-        # TODO: Configure flake8 rules and target directories
-        # flake8 src/ --count --select=E9,F63,F7,F82 --show-source --statistics
-        # flake8 src/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-        echo "TODO: Configure and run flake8 linting"
-    
-    - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v3
-      with:
-        terraform_version: latest
-    
-    - name: Terraform Format Check
-      run: |
-        # TODO: Configure terraform fmt for specific directories
-        # terraform fmt -check -recursive infrastructure/
-        echo "TODO: Configure and run terraform fmt check"
+      - uses: actions/checkout@v4
 
-  test:
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: terraform fmt -check -recursive
+        run: terraform fmt -check -recursive
+        working-directory: infrastructure/terraform
+
+  terraform-validate:
+    name: Terraform validate (${{ matrix.path }})
     runs-on: ubuntu-latest
-    name: Unit Tests
-    
+    strategy:
+      fail-fast: false
+      matrix:
+        path:
+          - infrastructure/terraform/modules/vpc
+          - infrastructure/terraform/environments/dev
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
-    
-    - name: Install Python dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pytest pytest-cov
-        # TODO: Add requirements.txt or pyproject.toml installation
-        # pip install -r requirements.txt
-    
-    - name: Run pytest
-      run: |
-        # TODO: Configure pytest for specific test directories and coverage
-        # pytest tests/ --cov=src/ --cov-report=xml --cov-report=html
-        # pytest src/ --doctest-modules
-        echo "TODO: Configure and run pytest unit tests"
-    
-    - name: Upload coverage reports
-      # TODO: Uncomment when tests are configured
-      # uses: codecov/codecov-action@v3
-      # with:
-      #   file: ./coverage.xml
-      #   flags: unittests
-      #   name: codecov-umbrella
-      run: |
-        echo "TODO: Configure coverage reporting"
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: terraform init -backend=false
+        run: terraform init -backend=false
+        working-directory: ${{ matrix.path }}
+
+      - name: terraform validate
+        run: terraform validate
+        working-directory: ${{ matrix.path }}
+
+  tflint:
+    name: tflint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: latest
+
+      - name: tflint --recursive
+        run: tflint --recursive
+        working-directory: infrastructure/terraform
+
+  trivy:
+    name: Trivy config scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Trivy config scan
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: config
+          scan-ref: infrastructure/
+          format: table
+          exit-code: '1'
+          severity: HIGH,CRITICAL
