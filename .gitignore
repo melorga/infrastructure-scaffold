@@ -40,8 +40,10 @@ aws-exports.js
 .env.production.local
 
 # Terraform
+# NOTE: .terraform.lock.hcl is intentionally NOT ignored.
+# HashiCorp guidance is to commit the lock file so provider
+# versions stay reproducible across machines and CI.
 .terraform/
-.terraform.lock.hcl
 *.tfstate
 *.tfstate.*
 *.tfvars
@@ -108,4 +110,3 @@ Icon
 # Logs
 logs/
 *.log
-
