@@ -1,21 +1,5 @@
 version: 2
 updates:
-  # Enable version updates for npm
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
-    reviewers:
-      - "melorga"
-    assignees:
-      - "melorga"
-    commit-message:
-      prefix: "deps"
-      prefix-development: "deps-dev"
-      include: "scope"
-
-  # Enable version updates for pip
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
@@ -30,9 +14,8 @@ updates:
       prefix-development: "deps-dev"
       include: "scope"
 
-  # Enable version updates for Terraform
   - package-ecosystem: "terraform"
-    directory: "/infrastructure"
+    directory: "/infrastructure/terraform"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
@@ -44,21 +27,6 @@ updates:
       prefix: "deps"
       include: "scope"
 
-  # Enable version updates for Docker
-  - package-ecosystem: "docker"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
-    reviewers:
-      - "melorga"
-    assignees:
-      - "melorga"
-    commit-message:
-      prefix: "deps"
-      include: "scope"
-
-  # Enable version updates for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

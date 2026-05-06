@@ -1,8 +1,7 @@
-# Source Code
+# Source code
 
-This directory contains the core ML application code.
+**Not yet implemented** - see the roadmap in the
+[root README](../README.md).
 
-## Structure
-
-- `training/` - Model training scripts and utilities
-- `inference/` - Model inference and serving code
+This directory is reserved for the application code (model
+training and inference) once the platform is in place.

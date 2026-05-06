@@ -1,8 +1,13 @@
 # Infrastructure
 
-This directory contains infrastructure-as-code resources for the MLOps platform.
+Infrastructure-as-code for the platform.
 
 ## Structure
 
-- `terraform/` - Terraform configurations for infrastructure provisioning
-- `cdk/` - AWS CDK resources for cloud infrastructure
+- `terraform/` - Terraform modules and per-environment compositions.
+  - `modules/vpc/` - thin wrapper around
+    `terraform-aws-modules/vpc/aws`.
+  - `environments/dev/` - dev environment that consumes the VPC
+    module.
+- `cdk/` - **Not yet implemented.** Reserved for future AWS CDK
+  stacks; see the roadmap in the [root README](../README.md).

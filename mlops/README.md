@@ -1,8 +1,7 @@
 # MLOps
 
-This directory contains MLOps pipeline definitions and reusable components.
+**Not yet implemented** - see the roadmap in the
+[root README](../README.md).
 
-## Structure
-
-- `pipelines/` - ML pipeline definitions and orchestration workflows
-- `components/` - Reusable ML components and pipeline steps
+This directory is reserved for ML pipeline definitions and
+reusable components (SageMaker pipelines, step functions, etc.).

@@ -1,8 +1,7 @@
 # Documentation
 
-This directory contains project documentation and architectural resources.
+**Not yet implemented** - see the roadmap in the
+[root README](../README.md).
 
-## Structure
-
-- `architecture/` - System architecture documentation
-- `diagrams/` - Technical diagrams and visual documentation
+This directory is reserved for architecture documentation and
+diagrams once the platform takes shape.
