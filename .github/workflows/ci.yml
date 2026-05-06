@@ -86,30 +86,24 @@ jobs:
           severity: HIGH,CRITICAL
 
   # ---------------------------------------------------------------------------
-  # Legacy-name alias jobs.
-  # The repo's branch protection on `main` requires status checks named
-  # `Lint Code`, `Unit Tests`, `Build` (from the pre-audit workflow). These
-  # aggregate jobs satisfy those required check names by depending on the real
-  # jobs above. Remove them once branch protection is updated to reference the
-  # new job names directly.
+  # Legacy-name alias jobs to satisfy branch protection.
+  # Branch protection on `main` requires status checks literally named
+  # `lint` and `test` (lowercase, from the pre-audit workflow's job IDs).
+  # These aggregate jobs use those exact IDs (and matching `name:` overrides)
+  # so the check_run names produced are exactly `lint` and `test`. They depend
+  # on the real jobs above and only succeed when those succeed. Remove these
+  # once branch protection is updated to reference the new job names directly.
   # ---------------------------------------------------------------------------
-  lint-code:
-    name: Lint Code
+  lint:
+    name: lint
     runs-on: ubuntu-latest
     needs: [terraform-fmt, tflint]
     steps:
-      - run: echo "Aggregate alias for required 'Lint Code' check; passes when terraform-fmt and tflint pass."
+      - run: echo "Aggregate alias for required 'lint' check; passes when terraform-fmt and tflint pass."
 
-  unit-tests:
-    name: Unit Tests
+  test:
+    name: test
     runs-on: ubuntu-latest
     needs: [terraform-validate]
     steps:
-      - run: echo "Aggregate alias for required 'Unit Tests' check; passes when terraform-validate passes."
-
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    needs: [terraform-fmt, terraform-validate, tflint, trivy]
-    steps:
-      - run: echo "Aggregate alias for required 'Build' check; passes when all real jobs pass."
+      - run: echo "Aggregate alias for required 'test' check; passes when terraform-validate passes."
