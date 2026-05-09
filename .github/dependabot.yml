@@ -1,41 +1,38 @@
 version: 2
 updates:
-  - package-ecosystem: "pip"
+  - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
-    reviewers:
-      - "melorga"
-    assignees:
-      - "melorga"
+      interval: "monthly"
+    open-pull-requests-limit: 2
+    groups:
+      actions-minor-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
     commit-message:
       prefix: "deps"
-      prefix-development: "deps-dev"
       include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"
 
   - package-ecosystem: "terraform"
     directory: "/infrastructure/terraform"
     schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
-    reviewers:
-      - "melorga"
-    assignees:
-      - "melorga"
+      interval: "monthly"
+    open-pull-requests-limit: 2
+    groups:
+      terraform-minor-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
     commit-message:
       prefix: "deps"
       include: "scope"
+    labels:
+      - "dependencies"
+      - "terraform"
 
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
-    reviewers:
-      - "melorga"
-    assignees:
-      - "melorga"
-    commit-message:
-      prefix: "deps"
-      include: "scope"
+  # NOTE: dropped the root `pip` ecosystem. There is no requirements.txt /
+  # pyproject.toml / setup.py at the repo root, so Dependabot would never
+  # find anything to update -- the entry only generated scan notifications.
+  # Re-add scoped to a real Python source directory once one exists.
