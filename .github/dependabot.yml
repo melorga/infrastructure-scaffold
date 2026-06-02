@@ -17,7 +17,9 @@ updates:
       - "github-actions"
 
   - package-ecosystem: "terraform"
-    directory: "/infrastructure/terraform"
+    directories:
+      - "/infrastructure/terraform/environments/*"
+      - "/infrastructure/terraform/modules/*"
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 2
